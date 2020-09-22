@@ -28,10 +28,10 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<Employee> getAll(int page, int numberPerPage) {
+    public List<Employee> getPage(int page, int itemPerPage) {
         Session session = sessionFactory.getCurrentSession();
-        return session.createQuery("from Employee").setFirstResult(numberPerPage * (page - 1))
-                .setMaxResults(numberPerPage).getResultList();
+        return session.createQuery("from Employee").setFirstResult(itemPerPage * (page - 1))
+                .setMaxResults(itemPerPage).getResultList();
     }
 
     @Override

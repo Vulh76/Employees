@@ -42,7 +42,7 @@ public class HibernateConfig {
     public LocalSessionFactoryBean sessionFactory(DataSource dataSource) {
         LocalSessionFactoryBean factoryBean = new LocalSessionFactoryBean();
         factoryBean.setDataSource(dataSource);
-        factoryBean.setPackagesToScan("ru/sbt/carshow");
+        factoryBean.setPackagesToScan("ru/sbt/employees");
         factoryBean.setHibernateProperties(getHibernateProperties());
         return factoryBean;
     }

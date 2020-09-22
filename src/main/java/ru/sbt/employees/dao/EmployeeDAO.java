@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface EmployeeDAO {
     List<Employee> getAll();
-    List<Employee> getAll(int page, int numberPerPage);
+    List<Employee> getPage(int page, int itemPerPage);
     Employee getById(long id);
     long add(Employee employee);
     void delete(Employee employee);

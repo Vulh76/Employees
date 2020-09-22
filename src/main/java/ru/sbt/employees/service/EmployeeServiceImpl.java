@@ -9,7 +9,7 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 @Component
-public class EmployeeServiceImpl implements EmployeeService{
+public class EmployeeServiceImpl implements EmployeeService {
 
     private final EmployeeDAO employeeDAO;
 
@@ -24,8 +24,8 @@ public class EmployeeServiceImpl implements EmployeeService{
     }
 
     @Transactional
-    public List<Employee> getAll(int page, int numberPerPage) {
-        return employeeDAO.getAll(page, numberPerPage);
+    public List<Employee> getPage(int page, int itemPerPage) {
+        return employeeDAO.getPage(page, itemPerPage);
     }
 
     @Transactional
