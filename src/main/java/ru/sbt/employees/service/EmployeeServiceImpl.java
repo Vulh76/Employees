@@ -24,8 +24,8 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Transactional
-    public List<Employee> getPage(int page, int itemPerPage) {
-        return employeeDAO.getPage(page, itemPerPage);
+    public List<Employee> getPage(int page, int itemPerPage, String sortColumn, boolean desc) {
+        return employeeDAO.getPage(page, itemPerPage, sortColumn, desc);
     }
 
     @Transactional
