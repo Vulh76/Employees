@@ -5,7 +5,7 @@ import ru.sbt.employees.model.Employee;
 import java.util.List;
 
 public interface EmployeeDAO {
-    List<Employee> getAll();
+    List<Employee> getAll(String sortColumn, boolean desc);
     List<Employee> getPage(int page, int itemPerPage, String sortColumn, boolean desc);
     Employee getById(long id);
     long add(Employee employee);

@@ -20,6 +20,6 @@ public class Main {
         employeeService.add(new Employee("Александр", "Вертушкин", 29, "Отдел внедрения"));
         employeeService.add(new Employee("Виктория", "Соколова", 31, "Отдел внедрения"));
 
-        System.out.println(employeeService.getAll());
+        System.out.println(employeeService.getAll("id", false));
     }
 }

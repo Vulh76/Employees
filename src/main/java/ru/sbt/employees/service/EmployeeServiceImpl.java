@@ -19,8 +19,8 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Transactional
-    public List<Employee> getAll() {
-        return employeeDAO.getAll();
+    public List<Employee> getAll(String sortColumn, boolean desc) {
+        return employeeDAO.getAll(sortColumn, desc);
     }
 
     @Transactional

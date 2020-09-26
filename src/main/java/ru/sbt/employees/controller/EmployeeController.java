@@ -1,12 +1,13 @@
 package ru.sbt.employees.controller;
 
-import org.hibernate.exception.SQLGrammarException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.ModelAndView;
 import ru.sbt.employees.model.Employee;
 import ru.sbt.employees.service.EmployeeService;
@@ -35,7 +36,8 @@ public class EmployeeController {
     public ModelAndView getPage(@RequestParam(name = "page", defaultValue = "1") int page,
                                 @RequestParam(name = "sort", defaultValue = "id") String sortColumn) {
         if(page < 1)
-            return errorMessage("Номер страницы не может быть меньше 1: " + page);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Номер страницы не может быть меньше 1: " + page);
+            //return errorMessage("Номер страницы не может быть меньше 1: " + page);
         List<Employee> employees;
         int employeesCount;
         boolean sortingDirection = sortingDirectionMap.merge(sortColumn, false, (oldVal, newVal) -> !oldVal);
@@ -50,7 +52,6 @@ public class EmployeeController {
         modelAndView.setViewName("employees");
         modelAndView.addObject("page", page);
         modelAndView.addObject("employeesList", employees);
-        modelAndView.addObject("employeesCount", employeesCount);
         modelAndView.addObject("pagesCount", pagesCount);
         this.page = page;
         return modelAndView;

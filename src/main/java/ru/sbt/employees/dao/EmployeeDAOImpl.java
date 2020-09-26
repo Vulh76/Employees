@@ -20,10 +20,16 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<Employee> getAll() {
+    public List<Employee> getAll(String sortColumn, boolean desc) {
         Session session = sessionFactory.getCurrentSession();
-        return session.createQuery("from Employee").getResultList();
-
+        String hql = "from Employee";
+        if(sortColumn != null && !sortColumn.isEmpty()) {
+            hql += " order by " + sortColumn;
+            if(desc) {
+                hql += " DESC";
+            }
+        }
+        return session.createQuery(hql).getResultList();
     }
 
     @Override
@@ -39,7 +45,8 @@ public class EmployeeDAOImpl implements EmployeeDAO {
         }
         return session.createQuery(hql)
                 .setFirstResult(itemPerPage * (page - 1))
-                .setMaxResults(itemPerPage).getResultList();
+                .setMaxResults(itemPerPage)
+                .getResultList();
     }
 
     @Override
