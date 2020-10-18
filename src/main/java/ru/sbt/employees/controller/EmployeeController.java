@@ -13,7 +13,6 @@ import ru.sbt.employees.model.Employee;
 import ru.sbt.employees.service.EmployeeService;
 
 import javax.persistence.PersistenceException;
-import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,8 +41,8 @@ public class EmployeeController {
         int employeesCount;
         boolean sortingDirection = sortingDirectionMap.merge(sortColumn, false, (oldVal, newVal) -> !oldVal);
         try {
-            employees = employeeService.getPage(page, itemPerPage, sortColumn, sortingDirection);
-            employeesCount = employeeService.count();
+            employees = employeeService.getPageEmployees(page, itemPerPage, sortColumn, sortingDirection);
+            employeesCount = employeeService.countEmployees();
         } catch (PersistenceException e) {
             return errorMessage("Ошибка выполнения SQL-запрса: " + e.getMessage());
         }
@@ -59,7 +58,7 @@ public class EmployeeController {
 
     @GetMapping("/employee")
     public ModelAndView getById(@RequestParam(name = "id", required = true) int id) {
-        Employee employee = employeeService.getById(id);
+        Employee employee = employeeService.getEmployeeById(id);
         if(employee == null)
             return errorMessage("Сотрудник не найден. ID: " + id);
         ModelAndView modelAndView = new ModelAndView();
@@ -79,13 +78,13 @@ public class EmployeeController {
     public ModelAndView addEmployee(@ModelAttribute("employee") Employee employee) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("redirect:/employees?page=" + this.page);
-        employeeService.add(employee);
+        employeeService.addEmployee(employee);
         return modelAndView;
     }
 
     @GetMapping("/edit")
     public ModelAndView editView(@RequestParam(name = "id", required = true) int id) {
-        Employee employee = employeeService.getById(id);
+        Employee employee = employeeService.getEmployeeById(id);
         if(employee == null)
             return errorMessage("Сотрудник не найден. ID: " + id);
         ModelAndView modelAndView = new ModelAndView();
@@ -98,7 +97,7 @@ public class EmployeeController {
     public ModelAndView editEmployee(@ModelAttribute("employee") Employee employee) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("redirect:/employees?page=" + this.page);
-        employeeService.update(employee);
+        employeeService.updateEmployee(employee);
         return modelAndView;
     }
 
@@ -108,8 +107,8 @@ public class EmployeeController {
             return errorMessage("Идентификатор сотрудника не может быть отрицательным");
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("redirect:/employees?page=" + this.page);
-        Employee employee = employeeService.getById(id);
-        employeeService.delete(employee);
+        Employee employee = employeeService.getEmployeeById(id);
+        employeeService.deleteEmployee(employee);
         return modelAndView;
     }
 

@@ -18,38 +18,45 @@ public class EmployeeServiceImpl implements EmployeeService {
         this.employeeDAO = employeeDAO;
     }
 
+    @Override
     @Transactional
-    public List<Employee> getAll(String sortColumn, boolean desc) {
-        return employeeDAO.getAll(sortColumn, desc);
+    public List<Employee> getAllEmployees(String sortColumn, boolean desc) {
+        return employeeDAO.getAll(Employee.class, sortColumn, desc);
     }
 
+    @Override
     @Transactional
-    public List<Employee> getPage(int page, int itemPerPage, String sortColumn, boolean desc) {
-        return employeeDAO.getPage(page, itemPerPage, sortColumn, desc);
+    public List<Employee> getPageEmployees(int page, int itemPerPage, String sortColumn, boolean desc) {
+        return employeeDAO.getPage(Employee.class, page, itemPerPage, sortColumn, desc);
     }
 
+    @Override
     @Transactional
-    public Employee getById(long id) {
-        return employeeDAO.getById(id);
+    public Employee getEmployeeById(long id) {
+        return employeeDAO.getById(Employee.class, id);
     }
 
+    @Override
     @Transactional
-    public long add(Employee employee) {
+    public long addEmployee(Employee employee) {
         return employeeDAO.add(employee);
     }
 
+    @Override
     @Transactional
-    public void delete(Employee employee) {
+    public void deleteEmployee(Employee employee) {
         employeeDAO.delete(employee);
     }
 
+    @Override
     @Transactional
-    public void update(Employee employee) {
+    public void updateEmployee(Employee employee) {
         employeeDAO.update(employee);
     }
 
+    @Override
     @Transactional
-    public int count() {
-        return employeeDAO.count();
+    public int countEmployees() {
+        return employeeDAO.count(Employee.class);
     }
 }

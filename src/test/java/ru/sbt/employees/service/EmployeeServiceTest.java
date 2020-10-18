@@ -35,7 +35,7 @@ public class EmployeeServiceTest {
             return id;
         });
 
-        Mockito.when(employeeDAO.getById(Mockito.anyLong())).thenAnswer(i ->
+        Mockito.when(employeeDAO.getById(Mockito.any(), Mockito.anyLong())).thenAnswer(i ->
                 longEmployeeHashMap.get(i.getArgument(0, Long.class))
         );
     }
@@ -43,9 +43,9 @@ public class EmployeeServiceTest {
     @Test
     public void addEmployeeTest1() {
         Employee employee = new Employee();
-        employeeService.add(employee);
+        employeeService.addEmployee(employee);
 
-        Employee car1 = employeeService.getById(employee.getId());
+        Employee car1 = employeeService.getEmployeeById(employee.getId());
         assertNotNull(car1);
     }
 
@@ -57,8 +57,8 @@ public class EmployeeServiceTest {
 
         Employee employee1 = new Employee();
         Employee employee2 = new Employee();
-        employeeService.add(employee1);
-        employeeService.add(employee2);
+        employeeService.addEmployee(employee1);
+        employeeService.addEmployee(employee2);
 
         List<Employee> allValues = captor.getAllValues();
         assertEquals(2, allValues.size());
