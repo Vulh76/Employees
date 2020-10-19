@@ -1,6 +1,6 @@
 package ru.sbt.employees.model;
 
-import com.sun.istack.NotNull;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -10,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,17 +22,18 @@ public class Department {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @NotNull
+    @NotEmpty
     @Size(min = 2, max = 50)
     private String name;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "department", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Employee> employees = new ArrayList<>();
 
     public Department() {
     }
 
-    public Department(@Size(min = 2, max = 50) String name) {
+    public Department(String name) {
         this.name = name;
     }
 

@@ -20,7 +20,7 @@
         <td>${employee.firstName}</td>
         <td>${employee.lastName}</td>
         <td>${employee.age}</td>
-        <td>${employee.department}</td>
+        <td>${employee.department.id}</td>
     </tr>
 </table>
 </body>

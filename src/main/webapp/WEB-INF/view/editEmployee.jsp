@@ -14,7 +14,7 @@
     <label for="age">Возраст</label>
     <input type="text" name="age" id="age" value="${employee.age}">
     <label for="department">Отдел</label>
-    <input type="text" name="department" id="department" value="${employee.department}">
+    <input type="text" name="department" id="department" value="${employee.department.id}">
     <input type="submit" value="Сохранить">
 </form>
 </body>

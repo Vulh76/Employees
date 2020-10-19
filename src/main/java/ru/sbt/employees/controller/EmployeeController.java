@@ -1,5 +1,7 @@
 package ru.sbt.employees.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -25,6 +27,8 @@ public class EmployeeController {
     private int page = 1;
     private final Map<String, Boolean> sortingDirectionMap = new HashMap<>();
 
+    private static final Logger logger = LoggerFactory.getLogger(EmployeeController.class);
+
     @Autowired
     public EmployeeController(EmployeeService employeeService) {
         this.employeeService = employeeService;
@@ -34,9 +38,13 @@ public class EmployeeController {
     //public ModelAndView getPage(HttpServletRequest request) {
     public ModelAndView getPage(@RequestParam(name = "page", defaultValue = "1") int page,
                                 @RequestParam(name = "sort", defaultValue = "id") String sortColumn) {
-        if(page < 1)
+        if(page < 1) {
+            logger.error("Ошибка передчи параметров. Page: {}", page);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Номер страницы не может быть меньше 1: " + page);
             //return errorMessage("Номер страницы не может быть меньше 1: " + page);
+        }
+        logger.debug("Вызван метод getPage. Page: {}, Sort by: {}", page, sortColumn);
+
         List<Employee> employees;
         int employeesCount;
         boolean sortingDirection = sortingDirectionMap.merge(sortColumn, false, (oldVal, newVal) -> !oldVal);
@@ -44,7 +52,9 @@ public class EmployeeController {
             employees = employeeService.getPageEmployees(page, itemPerPage, sortColumn, sortingDirection);
             employeesCount = employeeService.countEmployees();
         } catch (PersistenceException e) {
-            return errorMessage("Ошибка выполнения SQL-запрса: " + e.getMessage());
+            logger.error("Ошибка выполнения SQL-запрса. ", e);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Ошибка выполнения SQL-запрса: " + e.getMessage());
+            //return errorMessage("Ошибка выполнения SQL-запрса: " + e.getMessage());
         }
         int pagesCount = (employeesCount + itemPerPage - 1)/itemPerPage;
         ModelAndView modelAndView = new ModelAndView();

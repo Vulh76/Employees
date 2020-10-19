@@ -22,7 +22,7 @@
             <td>${employee.firstName}</td>
             <td>${employee.lastName}</td>
             <td>${employee.age}</td>
-            <td>${employee.department}</td>
+            <td>${employee.department.name}</td>
             <td>
                 <a href="/edit?id=${employee.id}">Редактировать</a>
                 <a href="/delete?id=${employee.id}">Удалить</a>

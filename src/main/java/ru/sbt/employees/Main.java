@@ -11,14 +11,6 @@ public class Main {
         ApplicationContext applicationContext = new AnnotationConfigApplicationContext(HibernateConfig.class);
         EmployeeServiceImpl employeeService = applicationContext.getBean(EmployeeServiceImpl.class);
 
-        employeeService.addEmployee(new Employee("Андрей", "Иванов", 27, "Отдел резработки"));
-        employeeService.addEmployee(new Employee("Илья", "Думаченко", 34, "Отдел резработки"));
-        employeeService.addEmployee(new Employee("Наталья", "Синичкина", 23, "Отдел резработки"));
-        employeeService.addEmployee(new Employee("Владимир", "Орлов", 43, "Отдел тестирования"));
-        employeeService.addEmployee(new Employee("Елизавета", "Котова", 39, "Отдел тестирования"));
-        employeeService.addEmployee(new Employee("Оксана", "Саратова", 22, "Отдел тестирования"));
-        employeeService.addEmployee(new Employee("Александр", "Вертушкин", 29, "Отдел внедрения"));
-        employeeService.addEmployee(new Employee("Виктория", "Соколова", 31, "Отдел внедрения"));
 
         System.out.println(employeeService.getAllEmployees("id", false));
     }
