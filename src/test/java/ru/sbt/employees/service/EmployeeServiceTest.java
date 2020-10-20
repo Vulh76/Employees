@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
+import org.slf4j.Logger;
 import ru.sbt.employees.dao.EmployeeDAO;
 import ru.sbt.employees.dao.EmployeeDAOImpl;
 import ru.sbt.employees.model.Employee;
@@ -16,13 +17,15 @@ import static org.junit.Assert.*;
 
 public class EmployeeServiceTest {
 
+    private Logger logger;
     private EmployeeDAO employeeDAO;
     private EmployeeServiceImpl employeeService;
 
     @Before
     public void setUp() throws Exception {
+        logger = Mockito.mock(Logger.class);
         employeeDAO = Mockito.mock(EmployeeDAOImpl.class);
-        employeeService = new EmployeeServiceImpl(employeeDAO);
+        employeeService = new EmployeeServiceImpl(employeeDAO, logger);
 
         HashMap<Long, Employee> longEmployeeHashMap = new HashMap<>();
         AtomicLong atomicLong = new AtomicLong();

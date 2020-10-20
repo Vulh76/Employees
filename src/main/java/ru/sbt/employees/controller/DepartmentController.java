@@ -2,16 +2,15 @@ package ru.sbt.employees.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
-import org.springframework.web.servlet.ModelAndView;
 import ru.sbt.employees.model.Department;
+import ru.sbt.employees.model.Employee;
 import ru.sbt.employees.service.DepartmentService;
 
 import javax.persistence.PersistenceException;
@@ -24,6 +23,11 @@ public class DepartmentController {
     @Autowired
     public DepartmentController(DepartmentService departmentService) {
         this.departmentService = departmentService;
+    }
+
+    @GetMapping("/departments/count")
+    public int getCount() {
+        return departmentService.getDepartmentsCount();
     }
 
     @GetMapping("/departments")
@@ -39,15 +43,29 @@ public class DepartmentController {
 
     @GetMapping("/department/{id}")
     public Department getById(@PathVariable("id") int id) {
+        return departmentService.getDepartmentById(id);
+    }
+
+    @GetMapping("/department/employees/{id}")
+    public List<Employee> getEmployeesByDepartmentId(@PathVariable("id") int id) {
         Department department = departmentService.getDepartmentById(id);
+        return department.getEmployees();
+    }
+
+    @PostMapping("/department/add")
+    public Department addDepartment(@RequestBody Department department) {
+        departmentService.addDepartment(department);
         return department;
     }
 
-    /*@PostMapping("/add")
-    public ModelAndView addEmployee(@ModelAttribute("employee") Department department) {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("redirect:/employees?page=1");
-        departmentService.addDepartment(department);
-        return modelAndView;
-    }*/
+    @PostMapping("/department/edit")
+    public Department editDepartment(@RequestBody Department department) {
+        departmentService.updateDepartment(department);
+        return department;
+    }
+
+    @GetMapping("/department/delete/{id}")
+    public void editDepartment(@PathVariable("id") int id) {
+        departmentService.deleteDepartment(id);
+    }
 }

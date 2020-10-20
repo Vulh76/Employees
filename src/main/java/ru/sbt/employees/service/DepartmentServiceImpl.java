@@ -1,5 +1,6 @@
 package ru.sbt.employees.service;
 
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.sbt.employees.dao.EmployeeDAO;
@@ -12,10 +13,18 @@ import java.util.List;
 public class DepartmentServiceImpl implements DepartmentService {
 
     private final EmployeeDAO employeeDAO;
+    private final Logger logger;
 
     @Autowired
-    public DepartmentServiceImpl(EmployeeDAO employeeDAO) {
+    public DepartmentServiceImpl(EmployeeDAO employeeDAO, Logger logger) {
         this.employeeDAO = employeeDAO;
+        this.logger = logger;
+    }
+
+    @Override
+    @Transactional
+    public int getDepartmentsCount() {
+        return employeeDAO.count(Department.class);
     }
 
     @Override
@@ -50,13 +59,13 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Override
     @Transactional
-    public void updateDepartment(Department department) {
-        employeeDAO.update(department);
+    public void deleteDepartment(long id) {
+        employeeDAO.delete(id);
     }
 
     @Override
     @Transactional
-    public int countDepartments() {
-        return employeeDAO.count(Department.class);
+    public void updateDepartment(Department department) {
+        employeeDAO.update(department);
     }
 }

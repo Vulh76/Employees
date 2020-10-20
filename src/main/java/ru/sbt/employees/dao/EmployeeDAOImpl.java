@@ -70,6 +70,12 @@ public class EmployeeDAOImpl implements EmployeeDAO {
     }
 
     @Override
+    public <T> void delete(Class<T> clazz, long id) {
+        Session session = sessionFactory.getCurrentSession();
+        session.delete(session.get(clazz, id));
+    }
+
+    @Override
     public <T> void update(T entity) {
         Session session = sessionFactory.getCurrentSession();
         session.update(entity);

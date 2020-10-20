@@ -1,5 +1,6 @@
 package ru.sbt.employees.service;
 
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.sbt.employees.dao.EmployeeDAO;
@@ -12,10 +13,18 @@ import java.util.List;
 public class EmployeeServiceImpl implements EmployeeService {
 
     private final EmployeeDAO employeeDAO;
+    private final Logger logger;
 
     @Autowired
-    public EmployeeServiceImpl(EmployeeDAO employeeDAO) {
+    public EmployeeServiceImpl(EmployeeDAO employeeDAO, Logger logger) {
         this.employeeDAO = employeeDAO;
+        this.logger = logger;
+    }
+
+    @Override
+    @Transactional
+    public int getEmployeesCount() {
+        return employeeDAO.count(Employee.class);
     }
 
     @Override
@@ -27,6 +36,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     @Transactional
     public List<Employee> getPageEmployees(int page, int itemPerPage, String sortColumn, boolean desc) {
+        //logger.debug("Вызван метод getPageEmployees. Page: {}, Sort by: {}", page, sortColumn);
         return employeeDAO.getPage(Employee.class, page, itemPerPage, sortColumn, desc);
     }
 
@@ -50,13 +60,13 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     @Transactional
-    public void updateEmployee(Employee employee) {
-        employeeDAO.update(employee);
+    public void deleteEmployee(long id) {
+        employeeDAO.delete(id);
     }
 
     @Override
     @Transactional
-    public int countEmployees() {
-        return employeeDAO.count(Employee.class);
+    public void updateEmployee(Employee employee) {
+        employeeDAO.update(employee);
     }
 }

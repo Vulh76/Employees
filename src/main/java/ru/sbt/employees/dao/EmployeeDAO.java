@@ -9,6 +9,7 @@ public interface EmployeeDAO {
     <T> List<T> getPage(Class<T> clazz, int page, int itemPerPage, String sortColumn, boolean desc);
     <T> T getById(Class<T> clazz, long id);
     <T> long add(T entity);
+    <T> void delete(Class<T> clazz, long id);
     <T> void delete(T entity);
     <T> void update(T entity);
     <T> int count(Class<T> clazz);
