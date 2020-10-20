@@ -90,7 +90,7 @@ public class Employee {
         return department;
     }
 
-    public void setDepartment(Department departmentId) {
+    public void setDepartment(Department department) {
         this.department = department;
     }
 

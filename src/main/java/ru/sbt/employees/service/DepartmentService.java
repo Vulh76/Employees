@@ -5,12 +5,12 @@ import ru.sbt.employees.model.Department;
 import java.util.List;
 
 public interface DepartmentService {
-    int getDepartmentsCount();
-    List<Department> getAllDepartments(String sortColumn, boolean desc);
-    List<Department> getPageDepartments(int page, int itemPerPage, String sortColumn, boolean desc);
-    Department getDepartmentById(long id);
-    long addDepartment(Department department);
-    void deleteDepartment(Department department);
-    void deleteDepartment(long id);
-    void updateDepartment(Department department);
+    List<Department> getAll();
+    List<Department> getPage(int page, int count);
+    Department getById(long id);
+    int getCount();
+    long add(Department department);
+    void delete(Department department);
+    void delete(long id);
+    void update(Department department);
 }

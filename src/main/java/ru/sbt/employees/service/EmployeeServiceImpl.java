@@ -1,6 +1,7 @@
 package ru.sbt.employees.service;
 
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.sbt.employees.dao.EmployeeDAO;
@@ -13,60 +14,59 @@ import java.util.List;
 public class EmployeeServiceImpl implements EmployeeService {
 
     private final EmployeeDAO employeeDAO;
-    private final Logger logger;
+    private final static Logger logger = LoggerFactory.getLogger(EmployeeService.class);
 
     @Autowired
-    public EmployeeServiceImpl(EmployeeDAO employeeDAO, Logger logger) {
+    public EmployeeServiceImpl(EmployeeDAO employeeDAO) {
         this.employeeDAO = employeeDAO;
-        this.logger = logger;
     }
 
     @Override
     @Transactional
-    public int getEmployeesCount() {
-        return employeeDAO.count(Employee.class);
+    public List<Employee> getAll() {
+        return employeeDAO.getAll(Employee.class);
     }
 
     @Override
     @Transactional
-    public List<Employee> getAllEmployees(String sortColumn, boolean desc) {
-        return employeeDAO.getAll(Employee.class, sortColumn, desc);
+    public List<Employee> getPage(int page, int count) {
+        logger.debug("Вызван метод getPageEmployees. Page: {}, Sort by: {}", page, count);
+        return employeeDAO.getPage(Employee.class, page, count);
     }
 
     @Override
     @Transactional
-    public List<Employee> getPageEmployees(int page, int itemPerPage, String sortColumn, boolean desc) {
-        //logger.debug("Вызван метод getPageEmployees. Page: {}, Sort by: {}", page, sortColumn);
-        return employeeDAO.getPage(Employee.class, page, itemPerPage, sortColumn, desc);
-    }
-
-    @Override
-    @Transactional
-    public Employee getEmployeeById(long id) {
+    public Employee getById(long id) {
         return employeeDAO.getById(Employee.class, id);
     }
 
     @Override
     @Transactional
-    public long addEmployee(Employee employee) {
+    public int getCount() {
+        return employeeDAO.count(Employee.class);
+    }
+
+    @Override
+    @Transactional
+    public long add(Employee employee) {
         return employeeDAO.add(employee);
     }
 
     @Override
     @Transactional
-    public void deleteEmployee(Employee employee) {
+    public void delete(Employee employee) {
         employeeDAO.delete(employee);
     }
 
     @Override
     @Transactional
-    public void deleteEmployee(long id) {
+    public void delete(long id) {
         employeeDAO.delete(id);
     }
 
     @Override
     @Transactional
-    public void updateEmployee(Employee employee) {
+    public void update(Employee employee) {
         employeeDAO.update(employee);
     }
 }

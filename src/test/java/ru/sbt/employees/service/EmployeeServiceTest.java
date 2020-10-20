@@ -23,9 +23,8 @@ public class EmployeeServiceTest {
 
     @Before
     public void setUp() throws Exception {
-        logger = Mockito.mock(Logger.class);
         employeeDAO = Mockito.mock(EmployeeDAOImpl.class);
-        employeeService = new EmployeeServiceImpl(employeeDAO, logger);
+        employeeService = new EmployeeServiceImpl(employeeDAO);
 
         HashMap<Long, Employee> longEmployeeHashMap = new HashMap<>();
         AtomicLong atomicLong = new AtomicLong();
@@ -46,9 +45,9 @@ public class EmployeeServiceTest {
     @Test
     public void addEmployeeTest1() {
         Employee employee = new Employee();
-        employeeService.addEmployee(employee);
+        employeeService.add(employee);
 
-        Employee car1 = employeeService.getEmployeeById(employee.getId());
+        Employee car1 = employeeService.getById(employee.getId());
         assertNotNull(car1);
     }
 
@@ -60,8 +59,8 @@ public class EmployeeServiceTest {
 
         Employee employee1 = new Employee();
         Employee employee2 = new Employee();
-        employeeService.addEmployee(employee1);
-        employeeService.addEmployee(employee2);
+        employeeService.add(employee1);
+        employeeService.add(employee2);
 
         List<Employee> allValues = captor.getAllValues();
         assertEquals(2, allValues.size());

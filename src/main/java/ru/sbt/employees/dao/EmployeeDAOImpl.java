@@ -20,32 +20,20 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T> List<T> getAll(Class<T> clazz, String sortColumn, boolean desc) {
+    public <T> List<T> getAll(Class<T> clazz) {
         Session session = sessionFactory.getCurrentSession();
         String hql = "from " + clazz.getSimpleName();
-        if(sortColumn != null && !sortColumn.isEmpty()) {
-            hql += " order by " + sortColumn;
-            if(desc) {
-                hql += " DESC";
-            }
-        }
         return session.createQuery(hql).getResultList();
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T> List<T> getPage(Class<T> clazz, int page, int itemPerPage, String sortColumn, boolean desc) {
+    public <T> List<T> getPage(Class<T> clazz, int page, int count) {
         Session session = sessionFactory.getCurrentSession();
         String hql = "from " + clazz.getSimpleName();
-        if(sortColumn != null && !sortColumn.isEmpty()) {
-            hql += " order by " + sortColumn;
-            if(desc) {
-                hql += " DESC";
-            }
-        }
         return session.createQuery(hql)
-                .setFirstResult(itemPerPage * (page - 1))
-                .setMaxResults(itemPerPage)
+                .setFirstResult(10 * (page - 1))
+                .setMaxResults(10)
                 .getResultList();
     }
 

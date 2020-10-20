@@ -12,6 +12,5 @@ public class Main {
         EmployeeServiceImpl employeeService = applicationContext.getBean(EmployeeServiceImpl.class);
 
 
-        System.out.println(employeeService.getAllEmployees("id", false));
     }
 }

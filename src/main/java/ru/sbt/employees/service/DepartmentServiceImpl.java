@@ -1,6 +1,7 @@
 package ru.sbt.employees.service;
 
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.sbt.employees.dao.EmployeeDAO;
@@ -13,59 +14,58 @@ import java.util.List;
 public class DepartmentServiceImpl implements DepartmentService {
 
     private final EmployeeDAO employeeDAO;
-    private final Logger logger;
+    private final static Logger logger = LoggerFactory.getLogger(DepartmentService.class);
 
     @Autowired
-    public DepartmentServiceImpl(EmployeeDAO employeeDAO, Logger logger) {
+    public DepartmentServiceImpl(EmployeeDAO employeeDAO) {
         this.employeeDAO = employeeDAO;
-        this.logger = logger;
     }
 
     @Override
     @Transactional
-    public int getDepartmentsCount() {
-        return employeeDAO.count(Department.class);
+    public List<Department> getAll() {
+        return employeeDAO.getAll(Department.class);
     }
 
     @Override
     @Transactional
-    public List<Department> getAllDepartments(String sortColumn, boolean desc) {
-        return employeeDAO.getAll(Department.class, sortColumn, desc);
+    public List<Department> getPage(int page, int count) {
+        return employeeDAO.getPage(Department.class, page, count);
     }
 
     @Override
     @Transactional
-    public List<Department> getPageDepartments(int page, int itemPerPage, String sortColumn, boolean desc) {
-        return employeeDAO.getPage(Department.class, page, itemPerPage, sortColumn, desc);
-    }
-
-    @Override
-    @Transactional
-    public Department getDepartmentById(long id) {
+    public Department getById(long id) {
         return employeeDAO.getById(Department.class, id);
     }
 
     @Override
     @Transactional
-    public long addDepartment(Department department) {
+    public int getCount() {
+        return employeeDAO.count(Department.class);
+    }
+
+    @Override
+    @Transactional
+    public long add(Department department) {
         return employeeDAO.add(department);
     }
 
     @Override
     @Transactional
-    public void deleteDepartment(Department department) {
+    public void delete(Department department) {
         employeeDAO.delete(department);
     }
 
     @Override
     @Transactional
-    public void deleteDepartment(long id) {
+    public void delete(long id) {
         employeeDAO.delete(id);
     }
 
     @Override
     @Transactional
-    public void updateDepartment(Department department) {
+    public void update(Department department) {
         employeeDAO.update(department);
     }
 }
