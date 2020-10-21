@@ -19,7 +19,7 @@ import java.util.Properties;
 @Configuration
 @EnableJpaRepositories
 @EnableTransactionManagement
-@PropertySource({"classpath:db.properties"})
+@PropertySource({"classpath:application.properties"})
 @ComponentScan("ru.sbt.employees")
 public class HibernateConfig {
 
