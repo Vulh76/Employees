@@ -1,6 +1,5 @@
 package ru.sbt.employees.config;
 
-import org.apache.tomcat.dbcp.dbcp2.BasicDataSource;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -16,13 +15,12 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import javax.sql.DataSource;
 import java.util.Properties;
 
-@Configuration
+/*@Configuration
 @EnableJpaRepositories
 @EnableTransactionManagement
 @PropertySource({"classpath:application.properties"})
 @ComponentScan("ru.sbt.employees")
 public class HibernateConfig {
-
     private final Environment environment;
 
     @Autowired
@@ -65,4 +63,4 @@ public class HibernateConfig {
         properties.setProperty("hibernate.hbm2ddl.auto", environment.getProperty("hibernate.hbm2ddl.auto"));
         return properties;
     }
-}
+}*/

@@ -35,7 +35,7 @@ public class EmployeeController {
         return employeeService.getAllEmployees();
     }*/
 
-    @GetMapping("/")
+    @GetMapping
     public Page<Employee> findPage(@RequestParam(name = "page", defaultValue = "0") int page,
                                    @RequestParam(name = "size", defaultValue = "10") int size) {
         logger.debug("Handling find page: page={}, size={}", page, size);
@@ -55,14 +55,13 @@ public class EmployeeController {
         return employee.getDepartment();
     }
 
-    @PostMapping("/")
+    @PostMapping
     public Employee add(@RequestBody Employee employee) {
         logger.debug("Handling add: {}", employee);
-        employeeService.add(employee);
-        return employee;
+        return employeeService.add(employee);
     }
 
-    @PutMapping("/")
+    @PutMapping
     public Employee update(@RequestBody Employee employee) {
         logger.debug("Handling update: {}", employee);
         employeeService.update(employee);

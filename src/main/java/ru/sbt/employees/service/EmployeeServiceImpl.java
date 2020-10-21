@@ -6,7 +6,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import ru.sbt.employees.exception.EntityNotFoundException;
-import ru.sbt.employees.model.Department;
 import ru.sbt.employees.model.Employee;
 import ru.sbt.employees.repository.EmployeeRepository;
 

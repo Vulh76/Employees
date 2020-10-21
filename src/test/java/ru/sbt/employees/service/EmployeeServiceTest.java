@@ -16,7 +16,6 @@ import static org.junit.Assert.*;
 
 public class EmployeeServiceTest {
 
-    private Logger logger;
     private EmployeeRepository employeeRepository;
     private EmployeeServiceImpl employeeService;
 

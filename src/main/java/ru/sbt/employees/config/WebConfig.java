@@ -15,11 +15,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Configuration
-@EnableWebMvc
+//@EnableWebMvc
 @ComponentScan("ru.sbt.employees")
 public class WebConfig implements WebMvcConfigurer {
 
-    @Bean
+    /*@Bean
     public MappingJackson2HttpMessageConverter jsonMessageConverter() {
         return new MappingJackson2HttpMessageConverter();
     }
@@ -39,5 +39,5 @@ public class WebConfig implements WebMvcConfigurer {
         viewResolver.setPrefix("/WEB-INF/view/");
         viewResolver.setSuffix(".jsp");
         return viewResolver;
-    }
+    }*/
 }

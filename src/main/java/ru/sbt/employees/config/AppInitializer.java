@@ -5,7 +5,7 @@ import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatche
 
 import javax.servlet.Filter;
 
-public class AppInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
+/*public class AppInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
 
     @Override
     protected Class<?>[] getRootConfigClasses() {
@@ -29,4 +29,4 @@ public class AppInitializer extends AbstractAnnotationConfigDispatcherServletIni
         characterEncodingFilter.setForceEncoding(true);
         return new Filter[]{characterEncodingFilter};
     }
-}
+}*/

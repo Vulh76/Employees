@@ -38,7 +38,7 @@ public class DepartmentController {
         return departmentService.findAll();
     }*/
 
-    @GetMapping("/")
+    @GetMapping
     public Page<Department> findPage(@RequestParam(name = "page", defaultValue = "1") int page,
                                      @RequestParam(name = "size", defaultValue = "10") int size) {
         logger.debug("Handling find page: page={}, size={}", page, size);
@@ -58,18 +58,17 @@ public class DepartmentController {
         return department.getEmployees();
     }
 
-    @PostMapping("/")
+    @PostMapping
     public Department add(@RequestBody Department department) {
         logger.debug("Handling add: {}", department);
         departmentService.add(department);
         return department;
     }
 
-    @PutMapping("/")
+    @PutMapping
     public Department update(@RequestBody Department department) {
         logger.debug("Handling update: {}", department);
-        departmentService.update(department);
-        return department;
+        return departmentService.update(department);
     }
 
     @DeleteMapping("/{id}")
