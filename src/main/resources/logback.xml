@@ -7,13 +7,12 @@
         </encoder>
     </appender>
 
-    <appender name="FILE"
-              class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>EmployeesDebug.log</file>
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/employee.log</file>
         <rollingPolicy
                 class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- daily rollover -->
-            <fileNamePattern>EmployeesDebug.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <fileNamePattern>employee.%d{yyyy-MM-dd}.log</fileNamePattern>
 
             <!-- Время хранения логов (дней) -->
             <maxHistory>10</maxHistory>
@@ -28,10 +27,6 @@
     </appender>
 
     <root level="debug">
-        <appender-ref ref="STDOUT"/>
-        <appender-ref ref="FILE"/>
-    </root>
-    <root level="error">
         <appender-ref ref="STDOUT"/>
         <appender-ref ref="FILE"/>
     </root>

@@ -46,13 +46,13 @@ public class DepartmentController {
     }
 
     @GetMapping("/{id}")
-    public Department findById(@PathVariable("id") long id) throws EntityNotFoundException {
+    public Department findById(@PathVariable("id") Long id) throws EntityNotFoundException {
         logger.debug("Handling find by id: id={}", id);
         return departmentService.findById(id);
     }
 
     @GetMapping("/{id}/employee")
-    public List<Employee> findEmployeesByDepartmentId(@PathVariable("id") long id) throws EntityNotFoundException {
+    public List<Employee> findEmployeesByDepartmentId(@PathVariable("id") Long id) throws EntityNotFoundException {
         logger.debug("Handling find employees by department id: id={}", id);
         Department department = departmentService.findById(id);
         return department.getEmployees();
@@ -72,7 +72,7 @@ public class DepartmentController {
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable("id") int id) {
+    public void delete(@PathVariable("id") Long id) {
         logger.debug("Handling delete: id={}", id);
         departmentService.delete(id);
     }

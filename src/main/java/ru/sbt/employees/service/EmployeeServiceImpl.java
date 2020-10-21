@@ -38,7 +38,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     @Transactional
-    public Employee findById(long id) {
+    public Employee findById(Long id) {
         Optional<Employee> employee = employeeRepository.findById(id);
         if(!employee.isPresent())
             throw new EntityNotFoundException(Employee.class, id);
@@ -65,7 +65,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     @Transactional
-    public void delete(long id) {
+    public void delete(Long id) {
         employeeRepository.deleteById(id);
     }
 

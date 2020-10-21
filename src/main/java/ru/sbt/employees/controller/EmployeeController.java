@@ -43,13 +43,13 @@ public class EmployeeController {
     }
 
     @GetMapping("/{id}")
-    public Employee findById(@PathVariable("id") long id) {
+    public Employee findById(@PathVariable("id") Long id) {
         logger.debug("Handling find by id: id={}", id);
         return employeeService.findById(id);
     }
 
     @GetMapping("/{id}/department")
-    public Department findDepartmentByEmployeeId(@PathVariable("id") long id) {
+    public Department findDepartmentByEmployeeId(@PathVariable("id") Long id) {
         logger.debug("Handling find department by employee id: id={}", id);
         Employee employee = employeeService.findById(id);
         return employee.getDepartment();
@@ -69,7 +69,7 @@ public class EmployeeController {
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable("id") int id) {
+    public void delete(@PathVariable("id") Long id) {
         logger.debug("Handling delete: id={}", id);
         employeeService.delete(id);
     }

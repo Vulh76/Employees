@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Springboot" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" singleton="false">
+  <configuration default="false" name="Spring Boot" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" singleton="false">
     <module name="Employees" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="ru.sbt.employees.SpringDataJPAApplication" />
     <option name="DEBUG_MODE" value="true" />
