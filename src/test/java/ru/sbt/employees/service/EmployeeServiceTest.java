@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
+import org.slf4j.Logger;
 import ru.sbt.employees.dao.EmployeeDAO;
 import ru.sbt.employees.dao.EmployeeDAOImpl;
 import ru.sbt.employees.model.Employee;
@@ -16,6 +17,7 @@ import static org.junit.Assert.*;
 
 public class EmployeeServiceTest {
 
+    private Logger logger;
     private EmployeeDAO employeeDAO;
     private EmployeeServiceImpl employeeService;
 
@@ -35,7 +37,7 @@ public class EmployeeServiceTest {
             return id;
         });
 
-        Mockito.when(employeeDAO.getById(Mockito.anyLong())).thenAnswer(i ->
+        Mockito.when(employeeDAO.getById(Mockito.any(), Mockito.anyLong())).thenAnswer(i ->
                 longEmployeeHashMap.get(i.getArgument(0, Long.class))
         );
     }

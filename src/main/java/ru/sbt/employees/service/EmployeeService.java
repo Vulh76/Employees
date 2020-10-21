@@ -5,11 +5,12 @@ import ru.sbt.employees.model.Employee;
 import java.util.List;
 
 public interface EmployeeService {
-    List<Employee> getAll(String sortColumn, boolean desc);
-    List<Employee> getPage(int page, int itemPerPage, String sortColumn, boolean desc);
+    List<Employee> getAll();
+    List<Employee> getPage(int page, int count);
     Employee getById(long id);
+    int getCount();
     long add(Employee employee);
     void delete(Employee employee);
+    void delete(long id);
     void update(Employee employee);
-    int count();
 }

@@ -1,11 +1,21 @@
 package ru.sbt.employees.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "employees", schema = "sbt")
@@ -15,22 +25,29 @@ public class Employee {
     @Column(name = "id")
     private long id;
 
-    @Column(name = "first_name", length = 100)
+    @Column(name = "first_name", length = 50)
+    @Size(min = 2, max = 50)
+    @NotEmpty
     private String firstName;
 
-    @Column(name = "last_name", length = 100)
+    @Column(name = "last_name", length = 50)
+    @Size(min = 2, max = 50)
+    @NotEmpty
     private String lastName;
 
     @Column(name = "age")
+    @Min(18)
+    @NotNull
     private int age;
 
-    @Column(name = "department")
-    private String department;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "department_id")
+    private Department department;
 
     public Employee() {
     }
 
-    public Employee(String firstName, String lastName, int age, String department) {
+    public Employee(String firstName, String lastName, int age, Department department) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.age = age;
@@ -69,11 +86,11 @@ public class Employee {
         this.age = age;
     }
 
-    public String getDepartment() {
+    public Department getDepartment() {
         return department;
     }
 
-    public void setDepartment(String department) {
+    public void setDepartment(Department department) {
         this.department = department;
     }
 
@@ -84,7 +101,6 @@ public class Employee {
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", age=" + age +
-                ", department='" + department + '\'' +
                 '}';
     }
 }

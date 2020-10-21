@@ -20,63 +20,57 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<Employee> getAll(String sortColumn, boolean desc) {
+    public <T> List<T> getAll(Class<T> clazz) {
         Session session = sessionFactory.getCurrentSession();
-        String hql = "from Employee";
-        if(sortColumn != null && !sortColumn.isEmpty()) {
-            hql += " order by " + sortColumn;
-            if(desc) {
-                hql += " DESC";
-            }
-        }
+        String hql = "from " + clazz.getSimpleName();
         return session.createQuery(hql).getResultList();
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<Employee> getPage(int page, int itemPerPage, String sortColumn, boolean desc) {
+    public <T> List<T> getPage(Class<T> clazz, int page, int count) {
         Session session = sessionFactory.getCurrentSession();
-        String hql = "from Employee";
-        if(sortColumn != null && !sortColumn.isEmpty()) {
-            hql += " order by " + sortColumn;
-            if(desc) {
-                hql += " DESC";
-            }
-        }
+        String hql = "from " + clazz.getSimpleName();
         return session.createQuery(hql)
-                .setFirstResult(itemPerPage * (page - 1))
-                .setMaxResults(itemPerPage)
+                .setFirstResult(10 * (page - 1))
+                .setMaxResults(10)
                 .getResultList();
     }
 
     @Override
-    public Employee getById(long id) {
+    public <T> T getById(Class<T> clazz, long id) {
         Session session = sessionFactory.getCurrentSession();
-        return session.get(Employee.class, id);
+        return session.get(clazz, id);
     }
 
     @Override
-    public long add(Employee employee) {
+    public <T> long add(T entity) {
         Session session = sessionFactory.getCurrentSession();
-        session.persist(employee);
-        return employee.getId();
-        //return (long) session.save(employee);
+        session.persist(entity);
+        //return entity.getId();
+        return (long) session.save(entity);
     }
 
     @Override
-    public void delete(Employee employee) {
+    public <T> void delete(T entity) {
         Session session = sessionFactory.getCurrentSession();
-        session.delete(employee);
+        session.delete(entity);
     }
 
     @Override
-    public void update(Employee employee) {
+    public <T> void delete(Class<T> clazz, long id) {
         Session session = sessionFactory.getCurrentSession();
-        session.update(employee);
+        session.delete(session.get(clazz, id));
     }
 
     @Override
-    public int count() {
+    public <T> void update(T entity) {
+        Session session = sessionFactory.getCurrentSession();
+        session.update(entity);
+    }
+
+    @Override
+    public <T> int count(Class<T> clazz) {
         Session session = sessionFactory.getCurrentSession();
         return session.createQuery("select count(e.id) from Employee e", Number.class).getSingleResult().intValue();
     }

@@ -1,122 +1,70 @@
 package ru.sbt.employees.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.server.ResponseStatusException;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.bind.annotation.RestController;
+import ru.sbt.employees.model.Department;
 import ru.sbt.employees.model.Employee;
 import ru.sbt.employees.service.EmployeeService;
 
-import javax.persistence.PersistenceException;
-import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-@Controller
-//@RequestMapping("/employees")
+@RestController
 public class EmployeeController {
     private final EmployeeService employeeService;
-    private int itemPerPage = 10;
-    private int page = 1;
-    private final Map<String, Boolean> sortingDirectionMap = new HashMap<>();
 
     @Autowired
     public EmployeeController(EmployeeService employeeService) {
         this.employeeService = employeeService;
     }
 
-    @GetMapping("/employees")
-    //public ModelAndView getPage(HttpServletRequest request) {
-    public ModelAndView getPage(@RequestParam(name = "page", defaultValue = "1") int page,
-                                @RequestParam(name = "sort", defaultValue = "id") String sortColumn) {
-        if(page < 1)
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Номер страницы не может быть меньше 1: " + page);
-            //return errorMessage("Номер страницы не может быть меньше 1: " + page);
-        List<Employee> employees;
-        int employeesCount;
-        boolean sortingDirection = sortingDirectionMap.merge(sortColumn, false, (oldVal, newVal) -> !oldVal);
-        try {
-            employees = employeeService.getPage(page, itemPerPage, sortColumn, sortingDirection);
-            employeesCount = employeeService.count();
-        } catch (PersistenceException e) {
-            return errorMessage("Ошибка выполнения SQL-запрса: " + e.getMessage());
-        }
-        int pagesCount = (employeesCount + itemPerPage - 1)/itemPerPage;
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("employees");
-        modelAndView.addObject("page", page);
-        modelAndView.addObject("employeesList", employees);
-        modelAndView.addObject("pagesCount", pagesCount);
-        this.page = page;
-        return modelAndView;
-    }
+    /*@GetMapping("/employee")
+    public List<Employee> getAll() {
+        return employeeService.getAllEmployees();
+    }*/
 
     @GetMapping("/employee")
-    public ModelAndView getById(@RequestParam(name = "id", required = true) int id) {
+    public List<Employee> getPage(@RequestParam(name = "page", defaultValue = "1") int page,
+                                  @RequestParam(name = "count", defaultValue = "10") int count) {
+        return employeeService.getPage(page, count);
+    }
+
+    @GetMapping("/employee/{id}")
+    public Employee getById(@PathVariable("id") int id) {
+        return employeeService.getById(id);
+    }
+
+    @GetMapping("/employee/{id}/department")
+    public Department getDepartmentByEmployeeId(@PathVariable("id") int id) {
         Employee employee = employeeService.getById(id);
-        if(employee == null)
-            return errorMessage("Сотрудник не найден. ID: " + id);
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("employee");
-        modelAndView.addObject("employee", employee);
-        return modelAndView;
+        return employee.getDepartment();
     }
 
-    @GetMapping("/add")
-    public ModelAndView addView() {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("addEmployee");
-        return modelAndView;
+    @GetMapping("/employee/count")
+    public int getCount() {
+        return employeeService.getCount();
     }
 
-    @PostMapping("/add")
-    public ModelAndView addEmployee(@ModelAttribute("employee") Employee employee) {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("redirect:/employees?page=" + this.page);
+    @PostMapping("/employee")
+    public Employee addEmployee(@RequestBody Employee employee) {
         employeeService.add(employee);
-        return modelAndView;
+        return employee;
     }
 
-    @GetMapping("/edit")
-    public ModelAndView editView(@RequestParam(name = "id", required = true) int id) {
-        Employee employee = employeeService.getById(id);
-        if(employee == null)
-            return errorMessage("Сотрудник не найден. ID: " + id);
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("editEmployee");
-        modelAndView.addObject("employee", employee);
-        return modelAndView;
-    }
-
-    @PostMapping("/edit")
-    public ModelAndView editEmployee(@ModelAttribute("employee") Employee employee) {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("redirect:/employees?page=" + this.page);
+    @PutMapping("/employee")
+    public Employee editEmployee(@RequestBody Employee employee) {
         employeeService.update(employee);
-        return modelAndView;
+        return employee;
     }
 
-    @GetMapping("/delete")
-    public ModelAndView deleteEmployee(@RequestParam(name = "id", required = true) int id) {
-        if(id < 0)
-            return errorMessage("Идентификатор сотрудника не может быть отрицательным");
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("redirect:/employees?page=" + this.page);
-        Employee employee = employeeService.getById(id);
-        employeeService.delete(employee);
-        return modelAndView;
-    }
-
-    private ModelAndView errorMessage(String message) {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("error");
-        modelAndView.addObject("message", message);
-        return modelAndView;
+    @DeleteMapping("/employee/{id}")
+    public void deleteEmployee(@PathVariable("id") int id) {
+        employeeService.delete(id);
     }
 }
