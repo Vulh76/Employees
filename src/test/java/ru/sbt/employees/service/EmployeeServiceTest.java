@@ -5,9 +5,8 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.slf4j.Logger;
-import ru.sbt.employees.dao.EmployeeDAO;
-import ru.sbt.employees.dao.EmployeeDAOImpl;
 import ru.sbt.employees.model.Employee;
+import ru.sbt.employees.repository.EmployeeRepository;
 
 import java.util.HashMap;
 import java.util.List;
@@ -18,18 +17,18 @@ import static org.junit.Assert.*;
 public class EmployeeServiceTest {
 
     private Logger logger;
-    private EmployeeDAO employeeDAO;
+    private EmployeeRepository employeeRepository;
     private EmployeeServiceImpl employeeService;
 
     @Before
     public void setUp() throws Exception {
-        employeeDAO = Mockito.mock(EmployeeDAOImpl.class);
-        employeeService = new EmployeeServiceImpl(employeeDAO);
+        employeeRepository = Mockito.mock(EmployeeRepository.class);
+        employeeService = new EmployeeServiceImpl(employeeRepository);
 
         HashMap<Long, Employee> longEmployeeHashMap = new HashMap<>();
         AtomicLong atomicLong = new AtomicLong();
 
-        Mockito.when(employeeDAO.add(Mockito.any())).thenAnswer(i -> {
+        Mockito.when(employeeRepository.save(Mockito.any())).thenAnswer(i -> {
             long id = atomicLong.incrementAndGet();
             Employee argument = i.getArgument(0, Employee.class);
             argument.setId(id);
@@ -37,7 +36,7 @@ public class EmployeeServiceTest {
             return id;
         });
 
-        Mockito.when(employeeDAO.getById(Mockito.any(), Mockito.anyLong())).thenAnswer(i ->
+        Mockito.when(employeeRepository.findById(Mockito.anyLong())).thenAnswer(i ->
                 longEmployeeHashMap.get(i.getArgument(0, Long.class))
         );
     }
@@ -47,14 +46,14 @@ public class EmployeeServiceTest {
         Employee employee = new Employee();
         employeeService.add(employee);
 
-        Employee car1 = employeeService.getById(employee.getId());
+        Employee car1 = employeeService.findById(employee.getId());
         assertNotNull(car1);
     }
 
     @Test
     public void addEmployeeTest2() {
         ArgumentCaptor<Employee> captor = ArgumentCaptor.forClass(Employee.class);
-        Mockito.doReturn(1L).when(employeeDAO).add(captor.capture());
+        Mockito.doReturn(1L).when(employeeRepository).save(captor.capture());
         //Mockito.when(carDAO.add(captor.capture())).thenReturn(1L);
 
         Employee employee1 = new Employee();

@@ -3,9 +3,12 @@ package ru.sbt.employees.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
-import ru.sbt.employees.dao.EmployeeDAO;
 import ru.sbt.employees.model.Employee;
+import ru.sbt.employees.repository.EmployeeRepository;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -13,60 +16,70 @@ import java.util.List;
 @Component
 public class EmployeeServiceImpl implements EmployeeService {
 
-    private final EmployeeDAO employeeDAO;
+    private final EmployeeRepository employeeRepository;
+
     private final static Logger logger = LoggerFactory.getLogger(EmployeeService.class);
 
     @Autowired
-    public EmployeeServiceImpl(EmployeeDAO employeeDAO) {
-        this.employeeDAO = employeeDAO;
+    public EmployeeServiceImpl(EmployeeRepository employeeRepository) {
+        this.employeeRepository = employeeRepository;
     }
 
     @Override
     @Transactional
-    public List<Employee> getAll() {
-        return employeeDAO.getAll(Employee.class);
+    public List<Employee> findAll()
+    {
+        logger.debug("getAll");
+        return employeeRepository.findAll();
     }
 
     @Override
     @Transactional
-    public List<Employee> getPage(int page, int count) {
-        logger.debug("Вызван метод getPageEmployees. Page: {}, Sort by: {}", page, count);
-        return employeeDAO.getPage(Employee.class, page, count);
+    public Page<Employee> findPage(int page, int size) {
+        logger.debug("getPage. page: {}, count: {}", page, size);
+        Pageable pageable = PageRequest.of(page, size);
+        return employeeRepository.findAll(pageable);
     }
 
     @Override
     @Transactional
-    public Employee getById(long id) {
-        return employeeDAO.getById(Employee.class, id);
+    public Employee findById(long id) {
+        logger.debug("getById. id: {}", id);
+        return employeeRepository.findById(id).get();
     }
 
     @Override
     @Transactional
-    public int getCount() {
-        return employeeDAO.count(Employee.class);
+    public Employee add(Employee employee) {
+        logger.debug("add");
+        return employeeRepository.save(employee);
     }
 
     @Override
     @Transactional
-    public long add(Employee employee) {
-        return employeeDAO.add(employee);
+    public Employee update(Employee employee) {
+        logger.debug("update");
+        return employeeRepository.save(employee);
     }
 
     @Override
     @Transactional
     public void delete(Employee employee) {
-        employeeDAO.delete(employee);
+        logger.debug("delete");
+        employeeRepository.delete(employee);
     }
 
     @Override
     @Transactional
     public void delete(long id) {
-        employeeDAO.delete(id);
+        logger.debug("delete");
+        employeeRepository.deleteById(id);
     }
 
     @Override
     @Transactional
-    public void update(Employee employee) {
-        employeeDAO.update(employee);
+    public long count() {
+        logger.debug("getCount");
+        return employeeRepository.count();
     }
 }

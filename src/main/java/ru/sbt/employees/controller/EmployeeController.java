@@ -1,6 +1,7 @@
 package ru.sbt.employees.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,46 +26,47 @@ public class EmployeeController {
     }
 
     /*@GetMapping("/employee")
-    public List<Employee> getAll() {
+    public List<Employee> findAll() {
         return employeeService.getAllEmployees();
     }*/
 
     @GetMapping("/employee")
-    public List<Employee> getPage(@RequestParam(name = "page", defaultValue = "1") int page,
-                                  @RequestParam(name = "count", defaultValue = "10") int count) {
-        return employeeService.getPage(page, count);
+    public Page<Employee> findPage(@RequestParam(name = "page", defaultValue = "0") int page,
+                                   @RequestParam(name = "size", defaultValue = "10") int size) {
+        return employeeService.findPage(page, size);
     }
 
     @GetMapping("/employee/{id}")
-    public Employee getById(@PathVariable("id") int id) {
-        return employeeService.getById(id);
+    public Employee findById(@PathVariable("id") int id) {
+        return employeeService.findById(id);
     }
 
     @GetMapping("/employee/{id}/department")
-    public Department getDepartmentByEmployeeId(@PathVariable("id") int id) {
-        Employee employee = employeeService.getById(id);
+    public Department findDepartmentByEmployeeId(@PathVariable("id") int id) {
+        Employee employee = employeeService.findById(id);
         return employee.getDepartment();
     }
 
-    @GetMapping("/employee/count")
-    public int getCount() {
-        return employeeService.getCount();
-    }
-
     @PostMapping("/employee")
-    public Employee addEmployee(@RequestBody Employee employee) {
+    public Employee add(@RequestBody Employee employee) {
         employeeService.add(employee);
         return employee;
     }
 
     @PutMapping("/employee")
-    public Employee editEmployee(@RequestBody Employee employee) {
+    public Employee update(@RequestBody Employee employee) {
         employeeService.update(employee);
         return employee;
     }
 
     @DeleteMapping("/employee/{id}")
-    public void deleteEmployee(@PathVariable("id") int id) {
+    public void delete(@PathVariable("id") int id) {
         employeeService.delete(id);
     }
+
+    @GetMapping("/employee/count")
+    public long count() {
+        return employeeService.count();
+    }
+
 }

@@ -3,69 +3,82 @@ package ru.sbt.employees.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
-import ru.sbt.employees.dao.EmployeeDAO;
 import ru.sbt.employees.model.Department;
+import ru.sbt.employees.repository.DepartmentRepository;
 
 import javax.transaction.Transactional;
 import java.util.List;
 
 @Component
 public class DepartmentServiceImpl implements DepartmentService {
+    private final DepartmentRepository departmentRepository;
 
-    private final EmployeeDAO employeeDAO;
     private final static Logger logger = LoggerFactory.getLogger(DepartmentService.class);
 
     @Autowired
-    public DepartmentServiceImpl(EmployeeDAO employeeDAO) {
-        this.employeeDAO = employeeDAO;
+    public DepartmentServiceImpl(DepartmentRepository departmentRepository) {
+        this.departmentRepository = departmentRepository;
     }
 
     @Override
     @Transactional
-    public List<Department> getAll() {
-        return employeeDAO.getAll(Department.class);
+    public List<Department> findAll() {
+        logger.debug("getAll");
+        return departmentRepository.findAll();
     }
 
     @Override
     @Transactional
-    public List<Department> getPage(int page, int count) {
-        return employeeDAO.getPage(Department.class, page, count);
+    public Page<Department> findPage(int page, int size) {
+        logger.debug("getPage. page: {}, count: {}", page, size);
+        Pageable pageable = PageRequest.of(page, size);
+        return departmentRepository.findAll(pageable);
     }
 
     @Override
     @Transactional
-    public Department getById(long id) {
-        return employeeDAO.getById(Department.class, id);
+    public Department findById(long id) {
+        logger.debug("getById");
+        return departmentRepository.findById(id).get();
     }
 
     @Override
     @Transactional
-    public int getCount() {
-        return employeeDAO.count(Department.class);
+    public Department add(Department department) {
+        logger.debug("add");
+        return departmentRepository.save(department);
     }
 
     @Override
     @Transactional
-    public long add(Department department) {
-        return employeeDAO.add(department);
+    public Department update(Department department) {
+        logger.debug("update");
+        return departmentRepository.save(department);
     }
 
     @Override
     @Transactional
     public void delete(Department department) {
-        employeeDAO.delete(department);
+        logger.debug("delete");
+        departmentRepository.delete(department);
     }
 
     @Override
     @Transactional
     public void delete(long id) {
-        employeeDAO.delete(id);
+        logger.debug("delete");
+        departmentRepository.deleteById(id);
     }
 
     @Override
     @Transactional
-    public void update(Department department) {
-        employeeDAO.update(department);
+    public long count() {
+        logger.debug("count");
+        return departmentRepository.count();
     }
+
 }

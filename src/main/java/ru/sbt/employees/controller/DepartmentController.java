@@ -1,6 +1,7 @@
 package ru.sbt.employees.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,47 +26,46 @@ public class DepartmentController {
     }
 
     /*@GetMapping("/department")
-    public List<Department> getAll() {
-        return departmentService.getAllDepartments();
+    public List<Department> findAll() {
+        return departmentService.findAll();
     }*/
 
     @GetMapping("/department")
-    public List<Department> getPage(@RequestParam(name = "page", defaultValue = "1") int page,
-                                    @RequestParam(name = "count", defaultValue = "10") int count) {
-        return departmentService.getPage(page, count);
+    public Page<Department> findPage(@RequestParam(name = "page", defaultValue = "1") int page,
+                                     @RequestParam(name = "size", defaultValue = "10") int size) {
+        return departmentService.findPage(page, size);
     }
 
-
     @GetMapping("/department/{id}")
-    public Department getById(@PathVariable("id") int id) {
-        return departmentService.getById(id);
+    public Department findById(@PathVariable("id") int id) {
+        return departmentService.findById(id);
     }
 
     @GetMapping("/department/{id}/employee")
-    public List<Employee> getEmployeesByDepartmentId(@PathVariable("id") int id) {
-        Department department = departmentService.getById(id);
+    public List<Employee> findEmployeesByDepartmentId(@PathVariable("id") int id) {
+        Department department = departmentService.findById(id);
         return department.getEmployees();
     }
 
-    @GetMapping("/department/count")
-    public int getCount() {
-        return departmentService.getCount();
-    }
-
     @PostMapping("/department")
-    public Department addDepartment(@RequestBody Department department) {
+    public Department add(@RequestBody Department department) {
         departmentService.add(department);
         return department;
     }
 
     @PutMapping("/department")
-    public Department editDepartment(@RequestBody Department department) {
+    public Department update(@RequestBody Department department) {
         departmentService.update(department);
         return department;
     }
 
     @DeleteMapping("/department/{id}")
-    public void editDepartment(@PathVariable("id") int id) {
+    public void delete(@PathVariable("id") int id) {
         departmentService.delete(id);
+    }
+
+    @GetMapping("/department/count")
+    public long count() {
+        return departmentService.count();
     }
 }

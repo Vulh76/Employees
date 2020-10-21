@@ -1,16 +1,17 @@
 package ru.sbt.employees.service;
 
+import org.springframework.data.domain.Page;
 import ru.sbt.employees.model.Department;
 
 import java.util.List;
 
 public interface DepartmentService {
-    List<Department> getAll();
-    List<Department> getPage(int page, int count);
-    Department getById(long id);
-    int getCount();
-    long add(Department department);
+    List<Department> findAll();
+    Page<Department> findPage(int page, int size);
+    Department findById(long id);
+    Department add(Department department);
+    Department update(Department department);
     void delete(Department department);
     void delete(long id);
-    void update(Department department);
+    long count();
 }
