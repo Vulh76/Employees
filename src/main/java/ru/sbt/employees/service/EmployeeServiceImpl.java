@@ -6,7 +6,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import ru.sbt.employees.exception.EntityNotFoundException;
-import ru.sbt.employees.model.Department;
 import ru.sbt.employees.model.Employee;
 import ru.sbt.employees.repository.EmployeeRepository;
 
@@ -39,7 +38,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     @Transactional
-    public Employee findById(long id) {
+    public Employee findById(Long id) {
         Optional<Employee> employee = employeeRepository.findById(id);
         if(!employee.isPresent())
             throw new EntityNotFoundException(Employee.class, id);
@@ -66,7 +65,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     @Transactional
-    public void delete(long id) {
+    public void delete(Long id) {
         employeeRepository.deleteById(id);
     }
 

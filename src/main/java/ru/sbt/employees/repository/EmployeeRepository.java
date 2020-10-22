@@ -10,5 +10,5 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     @Query("from Employee e where e.age > ?1")
     Employee queryByHigherAge(int age);
 
-    List<Employee> findByNameLike(String template);
+    List<Employee> findByFirstNameLike(String template);
 }

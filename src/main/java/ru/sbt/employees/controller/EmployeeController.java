@@ -35,7 +35,7 @@ public class EmployeeController {
         return employeeService.getAllEmployees();
     }*/
 
-    @GetMapping("/")
+    @GetMapping
     public Page<Employee> findPage(@RequestParam(name = "page", defaultValue = "0") int page,
                                    @RequestParam(name = "size", defaultValue = "10") int size) {
         logger.debug("Handling find page: page={}, size={}", page, size);
@@ -43,26 +43,25 @@ public class EmployeeController {
     }
 
     @GetMapping("/{id}")
-    public Employee findById(@PathVariable("id") long id) {
+    public Employee findById(@PathVariable("id") Long id) {
         logger.debug("Handling find by id: id={}", id);
         return employeeService.findById(id);
     }
 
     @GetMapping("/{id}/department")
-    public Department findDepartmentByEmployeeId(@PathVariable("id") long id) {
+    public Department findDepartmentByEmployeeId(@PathVariable("id") Long id) {
         logger.debug("Handling find department by employee id: id={}", id);
         Employee employee = employeeService.findById(id);
         return employee.getDepartment();
     }
 
-    @PostMapping("/")
+    @PostMapping
     public Employee add(@RequestBody Employee employee) {
         logger.debug("Handling add: {}", employee);
-        employeeService.add(employee);
-        return employee;
+        return employeeService.add(employee);
     }
 
-    @PutMapping("/")
+    @PutMapping
     public Employee update(@RequestBody Employee employee) {
         logger.debug("Handling update: {}", employee);
         employeeService.update(employee);
@@ -70,7 +69,7 @@ public class EmployeeController {
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable("id") int id) {
+    public void delete(@PathVariable("id") Long id) {
         logger.debug("Handling delete: id={}", id);
         employeeService.delete(id);
     }

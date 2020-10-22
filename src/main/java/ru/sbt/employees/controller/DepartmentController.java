@@ -38,7 +38,7 @@ public class DepartmentController {
         return departmentService.findAll();
     }*/
 
-    @GetMapping("/")
+    @GetMapping
     public Page<Department> findPage(@RequestParam(name = "page", defaultValue = "1") int page,
                                      @RequestParam(name = "size", defaultValue = "10") int size) {
         logger.debug("Handling find page: page={}, size={}", page, size);
@@ -46,34 +46,33 @@ public class DepartmentController {
     }
 
     @GetMapping("/{id}")
-    public Department findById(@PathVariable("id") long id) throws EntityNotFoundException {
+    public Department findById(@PathVariable("id") Long id) throws EntityNotFoundException {
         logger.debug("Handling find by id: id={}", id);
         return departmentService.findById(id);
     }
 
     @GetMapping("/{id}/employee")
-    public List<Employee> findEmployeesByDepartmentId(@PathVariable("id") long id) throws EntityNotFoundException {
+    public List<Employee> findEmployeesByDepartmentId(@PathVariable("id") Long id) throws EntityNotFoundException {
         logger.debug("Handling find employees by department id: id={}", id);
         Department department = departmentService.findById(id);
         return department.getEmployees();
     }
 
-    @PostMapping("/")
+    @PostMapping
     public Department add(@RequestBody Department department) {
         logger.debug("Handling add: {}", department);
         departmentService.add(department);
         return department;
     }
 
-    @PutMapping("/")
+    @PutMapping
     public Department update(@RequestBody Department department) {
         logger.debug("Handling update: {}", department);
-        departmentService.update(department);
-        return department;
+        return departmentService.update(department);
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable("id") int id) {
+    public void delete(@PathVariable("id") Long id) {
         logger.debug("Handling delete: id={}", id);
         departmentService.delete(id);
     }

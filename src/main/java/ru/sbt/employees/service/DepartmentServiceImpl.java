@@ -37,7 +37,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Override
     @Transactional
-    public Department findById(long id) {
+    public Department findById(Long id) {
         Optional<Department> department = departmentRepository.findById(id);
         if(!department.isPresent())
             throw new EntityNotFoundException(Department.class, id);
@@ -64,7 +64,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Override
     @Transactional
-    public void delete(long id) {
+    public void delete(Long id) {
         departmentRepository.deleteById(id);
     }
 
