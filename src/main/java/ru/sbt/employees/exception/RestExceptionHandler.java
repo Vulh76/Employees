@@ -59,6 +59,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     protected ResponseEntity<Object> handleMethodArgumentTypeMismatch(MethodArgumentTypeMismatchException ex,
                                                                       WebRequest request) {
+        logger.error("Method Argument Type Mismatch", ex);
         ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST);
         apiError.setMessage(String.format("The parameter '%s' of value '%s' could not be converted to type '%s'",
                 ex.getName(), ex.getValue(), ex.getRequiredType().getSimpleName()));
@@ -68,6 +69,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     protected ResponseEntity<Object> handleAllExceptions(Exception ex, WebRequest request) {
+        logger.error("Unknown Exception", ex);
         ApiError apiError = new ApiError(HttpStatus.INTERNAL_SERVER_ERROR, "Unknown Exception", ex);
         return new ResponseEntity<>(apiError, HttpStatus.OK);
     }

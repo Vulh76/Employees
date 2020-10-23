@@ -20,6 +20,9 @@ import ru.sbt.employees.service.DepartmentService;
 
 import java.util.List;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 @RestController
 @RequestMapping("/department")
 public class DepartmentController {
@@ -39,20 +42,38 @@ public class DepartmentController {
     }*/
 
     @GetMapping
-    public Page<Department> findPage(@RequestParam(name = "page", defaultValue = "1") int page,
+    public Page<Department> findPage(@RequestParam(name = "page", defaultValue = "0") int page,
                                      @RequestParam(name = "size", defaultValue = "10") int size) {
         logger.debug("Handling find page: page={}, size={}", page, size);
-        return departmentService.findPage(page, size);
+
+        Page<Department> departments = departmentService.findPage(page, size);
+
+        for (Department department : departments.getContent()) {
+            department.add(linkTo(methodOn(DepartmentController.class)
+                    .findById(department.getId())).withSelfRel());
+            department.add(linkTo(methodOn(DepartmentController.class)
+                    .findDepartmentEmployees(department.getId())).withRel("employees"));
+        }
+
+        return departments;
     }
 
     @GetMapping("/{id}")
     public Department findById(@PathVariable("id") Long id) throws EntityNotFoundException {
         logger.debug("Handling find by id: id={}", id);
-        return departmentService.findById(id);
+
+        Department department = departmentService.findById(id);
+
+        department.add(linkTo(methodOn(DepartmentController.class)
+                .findById(id)).withSelfRel());
+        department.add(linkTo(methodOn(DepartmentController.class)
+                .findDepartmentEmployees(department.getId())).withRel("employees"));
+
+        return department;
     }
 
     @GetMapping("/{id}/employee")
-    public List<Employee> findEmployeesByDepartmentId(@PathVariable("id") Long id) throws EntityNotFoundException {
+    public List<Employee> findDepartmentEmployees(@PathVariable("id") Long id) throws EntityNotFoundException {
         logger.debug("Handling find employees by department id: id={}", id);
         Department department = departmentService.findById(id);
         return department.getEmployees();

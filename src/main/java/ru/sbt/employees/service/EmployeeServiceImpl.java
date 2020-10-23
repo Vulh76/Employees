@@ -38,6 +38,13 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     @Transactional
+    public Page<Employee> findEmployeesByDepartmentId(Long id, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return employeeRepository.findEmployeesByDepartmentId(id, pageable);
+    }
+
+    @Override
+    @Transactional
     public Employee findById(Long id) {
         Optional<Employee> employee = employeeRepository.findById(id);
         if(!employee.isPresent())

@@ -1,8 +1,7 @@
 package ru.sbt.employees.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.hateoas.RepresentationModel;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -19,7 +18,7 @@ import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "employees", schema = "sbt")
-public class Employee {
+public class Employee extends RepresentationModel<Employee> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")

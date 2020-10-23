@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.hateoas.Link;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,6 +17,11 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.sbt.employees.model.Department;
 import ru.sbt.employees.model.Employee;
 import ru.sbt.employees.service.EmployeeService;
+
+import java.util.List;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping("/employee")
@@ -36,23 +42,54 @@ public class EmployeeController {
     }*/
 
     @GetMapping
-    public Page<Employee> findPage(@RequestParam(name = "page", defaultValue = "0") int page,
-                                   @RequestParam(name = "size", defaultValue = "10") int size) {
+    public Page<Employee> findPage(
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "size", defaultValue = "10") int size) {
+
         logger.debug("Handling find page: page={}, size={}", page, size);
-        return employeeService.findPage(page, size);
+
+        Page<Employee> employees = employeeService.findPage(page, size);
+
+        for(Employee employee : employees.getContent()) {
+            employee.add(linkTo(methodOn(EmployeeController.class)
+                    .findById(employee.getId())).withSelfRel());
+            employee.add(linkTo(methodOn(DepartmentController.class)
+                    .findById(employee.getId())).withRel("department"));
+        }
+
+        return employees;
     }
 
     @GetMapping("/{id}")
     public Employee findById(@PathVariable("id") Long id) {
         logger.debug("Handling find by id: id={}", id);
+
+        Employee employee = employeeService.findById(id);
+
+        employee.add(linkTo(methodOn(EmployeeController.class)
+                .findById(id)).withSelfRel());
+        employee.add(linkTo(methodOn(DepartmentController.class)
+                .findById(employee.getId())).withRel("department"));
+
         return employeeService.findById(id);
     }
 
     @GetMapping("/{id}/department")
-    public Department findDepartmentByEmployeeId(@PathVariable("id") Long id) {
+    public Department findEmployeeDepartment(@PathVariable("id") Long id) {
         logger.debug("Handling find department by employee id: id={}", id);
         Employee employee = employeeService.findById(id);
         return employee.getDepartment();
+    }
+
+    @GetMapping("/department/{id}")
+    public Page<Employee> findEmployeesByDepartmentId(
+            @PathVariable("id") Long id,
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "size", defaultValue = "10") int size) {
+
+        logger.debug("Handling find employees by department id: id={}", id);
+        Page<Employee> employees = employeeService.findEmployeesByDepartmentId(id, page, size);
+        return employees;
     }
 
     @PostMapping

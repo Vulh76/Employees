@@ -1,6 +1,7 @@
 package ru.sbt.employees.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.hateoas.RepresentationModel;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -17,7 +18,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "departments", schema = "sbt")
-public class Department {
+public class Department extends RepresentationModel<Department> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -28,7 +29,7 @@ public class Department {
 
     @JsonIgnore
     @OneToMany(mappedBy = "department", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-    private List<Employee> employees = new ArrayList<>();
+    private final List<Employee> employees = new ArrayList<>();
 
     public Department() {
     }
