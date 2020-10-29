@@ -1,0 +1,8 @@
+databaseChangeLog:
+  - logicalFilePath: db/changelog/db.changelog-create-employees.yaml
+  - includeAll:
+      path: db/changelog/1.0
+  - includeAll:
+      path: db/changelog/data
+  - include:
+      file: db/changelog/db.changelog-20201030-100748636.yaml

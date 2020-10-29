@@ -35,11 +35,11 @@ public class DepartmentController {
         this.departmentService = departmentService;
     }
 
-    /*@GetMapping("/all")
+    @GetMapping("/all")
     public List<Department> findAll() {
         logger.debug("Handling find all");
         return departmentService.findAll();
-    }*/
+    }
 
     @GetMapping
     public Page<Department> findPage(@RequestParam(name = "page", defaultValue = "0") int page,

@@ -1,5 +1,6 @@
 package ru.sbt.employees.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.hateoas.RepresentationModel;
 
 import javax.persistence.Column;
@@ -39,6 +40,7 @@ public class Employee extends RepresentationModel<Employee> {
     @NotNull
     private int age;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "department_id")
     private Department department;

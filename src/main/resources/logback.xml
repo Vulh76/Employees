@@ -12,7 +12,7 @@
         <rollingPolicy
                 class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- daily rollover -->
-            <fileNamePattern>employee.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <fileNamePattern>logs/employee.%d{yyyy-MM-dd}.log</fileNamePattern>
 
             <!-- Время хранения логов (дней) -->
             <maxHistory>10</maxHistory>

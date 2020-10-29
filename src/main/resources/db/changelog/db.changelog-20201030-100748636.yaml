@@ -1,0 +1,15 @@
+databaseChangeLog:
+  - changeSet:
+      id: 100
+      author: andrey_korolev
+      changes:
+        - addColumn:
+            schemaName: sbt
+            tableName: employees
+            columns:
+              - column:
+                  name: email
+                  type: varchar(50)
+                  constraints:
+                      unique: true
+                      nullable: true

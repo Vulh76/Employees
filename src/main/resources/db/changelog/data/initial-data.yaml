@@ -1,0 +1,50 @@
+databaseChangeLog:
+  - changeSet:
+      id: 22
+      author: andrey_korolev
+      changes:
+        - loadData:
+            columns:
+              - column:
+                  header: name
+                  name: name
+                  type: STRING
+            commentLineStartsWith: '#'
+            encoding: UTF-8
+            file: data/departments.csv
+            quotchar: '"'
+            separator: ','
+            relativeToChangelogFile: true
+            schemaName: sbt
+            tableName: departments
+
+  - changeSet:
+      id: 23
+      author: andrey_korolev
+      changes:
+        - loadData:
+            columns:
+              - column:
+                  header: first_name
+                  name: first_name
+                  type: STRING
+              - column:
+                    header: last_name
+                    name: last_name
+                    type: STRING
+              - column:
+                    header: age
+                    name: age
+                    type: NUMERIC
+              - column:
+                    header: department_id
+                    name: department_id
+                    type: NUMERIC
+            commentLineStartsWith: '#'
+            encoding: UTF-8
+            file: data/employees.csv
+            quotchar: '"'
+            separator: ','
+            relativeToChangelogFile: true
+            schemaName: sbt
+            tableName: employees

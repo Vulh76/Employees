@@ -39,9 +39,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     @Transactional
     public Department findById(Long id) {
         Optional<Department> department = departmentRepository.findById(id);
-        if(!department.isPresent())
-            throw new EntityNotFoundException(Department.class, id);
-        return department.get();
+        return department.orElseThrow(() -> new EntityNotFoundException(Department.class, id));
     }
 
     @Override

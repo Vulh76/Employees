@@ -47,9 +47,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Transactional
     public Employee findById(Long id) {
         Optional<Employee> employee = employeeRepository.findById(id);
-        if(!employee.isPresent())
-            throw new EntityNotFoundException(Employee.class, id);
-        return employee.get();
+        return employee.orElseThrow(() -> new EntityNotFoundException(Employee.class, id));
     }
 
     @Override
