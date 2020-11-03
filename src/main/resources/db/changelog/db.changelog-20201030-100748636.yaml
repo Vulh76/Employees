@@ -13,3 +13,10 @@ databaseChangeLog:
                   constraints:
                       unique: true
                       nullable: true
+      rollback:
+        - dropColumn:
+            schemaName: sbt
+            tableName: employees
+            columns:
+              - column:
+                  name: email

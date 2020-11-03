@@ -29,17 +29,17 @@ databaseChangeLog:
                   name: first_name
                   type: STRING
               - column:
-                    header: last_name
-                    name: last_name
-                    type: STRING
+                  header: last_name
+                  name: last_name
+                  type: STRING
               - column:
-                    header: age
-                    name: age
-                    type: NUMERIC
+                  header: age
+                  name: age
+                  type: NUMERIC
               - column:
-                    header: department_id
-                    name: department_id
-                    type: NUMERIC
+                  header: department_id
+                  name: department_id
+                  type: NUMERIC
             commentLineStartsWith: '#'
             encoding: UTF-8
             file: data/employees.csv
