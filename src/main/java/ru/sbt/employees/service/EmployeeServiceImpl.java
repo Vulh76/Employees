@@ -31,15 +31,13 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     @Transactional
-    public Page<Employee> findPage(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
+    public Page<Employee> findPage(Pageable pageable) {
         return employeeRepository.findAll(pageable);
     }
 
     @Override
     @Transactional
-    public Page<Employee> findEmployeesByDepartmentId(Long id, int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
+    public Page<Employee> findEmployeesByDepartmentId(Long id, Pageable pageable) {
         return employeeRepository.findEmployeesByDepartmentId(id, pageable);
     }
 

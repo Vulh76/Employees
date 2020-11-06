@@ -4,8 +4,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
-import org.springframework.hateoas.Link;
+import org.springframework.hateoas.MediaTypes;
+import org.springframework.hateoas.PagedModel;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,97 +23,96 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.sbt.employees.model.Department;
 import ru.sbt.employees.model.Employee;
+import ru.sbt.employees.payload.DepartmentModelAssembler;
+import ru.sbt.employees.payload.EmployeeModelAssembler;
 import ru.sbt.employees.service.EmployeeService;
-
-import java.util.List;
-import java.util.function.Function;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
-@RequestMapping("/employee")
+@RequestMapping(value = "/employee", produces = { MediaType.APPLICATION_JSON_VALUE, MediaTypes.HAL_JSON_VALUE })
 public class EmployeeController {
+
+    private final int DEFAULT_PAGE_NUMBER = 0;
+    private final int DEFAULT_PAGE_SIZE = 10;
+
     private final EmployeeService employeeService;
+    private final EmployeeModelAssembler employeeModelAssembler;
+    private final DepartmentModelAssembler departmentModelAssembler;
 
     private final static Logger logger = LoggerFactory.getLogger(EmployeeController.class);
 
     @Autowired
-    public EmployeeController(EmployeeService employeeService) {
+    public EmployeeController(EmployeeService employeeService, EmployeeModelAssembler employeeModelAssembler, DepartmentModelAssembler departmentModelAssembler) {
         this.employeeService = employeeService;
+        this.employeeModelAssembler = employeeModelAssembler;
+        this.departmentModelAssembler = departmentModelAssembler;
     }
 
     @GetMapping("/all")
-    public List<Employee> findAll() {
+    public CollectionModel<EntityModel<Employee>> findAll() {
         logger.debug("Handling find all");
-        return employeeService.findAll();
+        return employeeModelAssembler.toCollectionModel(employeeService.findAll());
     }
 
     @GetMapping
-    public Page<Employee> findPage(
-            @RequestParam(name = "page", defaultValue = "0") int page,
-            @RequestParam(name = "size", defaultValue = "10") int size) {
+    public PagedModel<EntityModel<Employee>> findPage(
+            @PageableDefault(page = DEFAULT_PAGE_NUMBER, size = DEFAULT_PAGE_SIZE) Pageable pageRequest,
+            PagedResourcesAssembler<Employee> pagedResourcesAssembler) {
 
-        logger.debug("Handling find page: page={}, size={}", page, size);
+        logger.debug("Handling find page: page={}, size={}", pageRequest.getPageNumber(), pageRequest.getPageSize());
 
-        Page<Employee> employees = employeeService.findPage(page, size);
-
+        Page<Employee> employees = employeeService.findPage(pageRequest);
         for(Employee employee : employees.getContent()) {
-            employee.add(linkTo(methodOn(EmployeeController.class).findById(employee.getId())).withSelfRel());
-            employee.add(linkTo(methodOn(DepartmentController.class).findById(employee.getId())).withRel("department"));
+            employee.add(linkTo(methodOn(EmployeeController.class).findPage(pageRequest, pagedResourcesAssembler)).withSelfRel());
+            employee.add(linkTo(methodOn(EmployeeController.class).findEmployeeDepartment(employee.getId())).withRel("department"));
         }
-
-        return employees;
+        PagedModel.of(employees, linkTo(methodOn(EmployeeController.class).findPage(pageRequest, pagedResourcesAssembler)).withSelfRel());
+        return pagedResourcesAssembler.toModel(employees);
     }
 
     @GetMapping("/{id}")
     public EntityModel<Employee> findById(@PathVariable("id") Long id) {
         logger.debug("Handling find by id: id={}", id);
-
-        Employee employee = employeeService.findById(id);
-
-        /*employee.add(linkTo(methodOn(EmployeeController.class)
-                .findById(id)).withSelfRel());
-        employee.add(linkTo(methodOn(DepartmentController.class)
-                .findById(employee.getId())).withRel("department"));*/
-
-        return EntityModel.of(employeeService.findById(id)).add(
-                linkTo(methodOn(EmployeeController.class).findById(id)).withSelfRel(),
-                linkTo(methodOn(DepartmentController.class).findById(employee.getId())).withRel("department"));
+        return employeeModelAssembler.toModel(employeeService.findById(id));
     }
 
     @GetMapping("/{id}/department")
-    public Department findEmployeeDepartment(@PathVariable("id") Long id) {
+    public EntityModel<Department> findEmployeeDepartment(@PathVariable("id") Long id) {
         logger.debug("Handling find department by employee id: id={}", id);
         Employee employee = employeeService.findById(id);
-        return employee.getDepartment();
+        return departmentModelAssembler.toModel(employee.getDepartment());
     }
 
     @GetMapping("/department/{id}")
-    public Page<Employee> findEmployeesByDepartmentId(
+    public PagedModel<EntityModel<Employee>> findEmployeesByDepartmentId(
             @PathVariable("id") Long id,
-            @RequestParam(name = "page", defaultValue = "0") int page,
-            @RequestParam(name = "size", defaultValue = "10") int size) {
+            @PageableDefault(page = DEFAULT_PAGE_NUMBER, size = DEFAULT_PAGE_SIZE) Pageable pageRequest,
+            PagedResourcesAssembler<Employee> pagedResourcesAssembler) {
 
         logger.debug("Handling find employees by department id: id={}", id);
-        Page<Employee> employees = employeeService.findEmployeesByDepartmentId(id, page, size);
+
+        Page<Employee> employees = employeeService.findEmployeesByDepartmentId(id,  pageRequest);
+        PagedModel.of(employees, linkTo(methodOn(EmployeeController.class).findPage(pageRequest, pagedResourcesAssembler)).withSelfRel());
         for(Employee employee : employees.getContent()) {
+            employee.add(linkTo(methodOn(EmployeeController.class).findEmployeesByDepartmentId(id, pageRequest, pagedResourcesAssembler)).withSelfRel());
             employee.add(linkTo(methodOn(EmployeeController.class).findEmployeeDepartment(id)).withRel("department"));
         }
-        return employees;
+        return pagedResourcesAssembler.toModel(employees);
     }
 
     @PostMapping
-    public Employee add(@RequestBody Employee employee) {
+    public EntityModel<Employee> add(@RequestBody Employee employee) {
         logger.debug("Handling add: {}", employee);
-        return employeeService.add(employee);
+        return employeeModelAssembler.toModel(employeeService.add(employee));
     }
 
     @PutMapping
-    public Employee update(@RequestBody Employee employee) {
+    public EntityModel<Employee> update(@RequestBody Employee employee) {
         logger.debug("Handling update: {}", employee);
         employeeService.update(employee);
-        return employee;
+        return employeeModelAssembler.toModel(employee);
     }
 
     @DeleteMapping("/{id}")
@@ -121,5 +126,4 @@ public class EmployeeController {
         logger.debug("Handling count");
         return employeeService.count();
     }
-
 }

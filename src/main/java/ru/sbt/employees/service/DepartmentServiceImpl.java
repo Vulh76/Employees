@@ -30,8 +30,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Override
     @Transactional
-    public Page<Department> findPage(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
+    public Page<Department> findPage(Pageable pageable) {
         return departmentRepository.findAll(pageable);
     }
 

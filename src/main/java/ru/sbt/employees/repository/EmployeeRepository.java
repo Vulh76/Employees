@@ -13,9 +13,7 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     @Query("from Employee e where e.age > ?1")
     Page<Employee> queryByHigherAge(int age, Pageable pageable);
 
-    @Query("SELECT name, EXTRACT(year FROM age(current_date, date_of_birth))::int as age FROM public.employees")
-    Page<Employee> queryByHigherAge2(int age1, Pageable pageable);
-    //@Query("SELECT name, date_part('year',age(date_of_birth)),* FROM public.employees")
-    //Page<Employee> queryByHigherAge2(int age1, Pageable pageable);
+    //@Query(value = "SELECT name, EXTRACT(year FROM age(current_date, date_of_birth))::int as age FROM public.employees", nativeQuery = true)
+    //Page<Employee> queryNameAndAge(Pageable pageable);
 }
 
