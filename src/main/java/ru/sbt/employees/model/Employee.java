@@ -19,7 +19,7 @@ import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "employees", schema = "sbt")
-public class Employee extends RepresentationModel<Employee> {
+public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")

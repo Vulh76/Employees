@@ -3,7 +3,6 @@ package ru.sbt.employees.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.PagedResourcesAssembler;
@@ -19,7 +18,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.sbt.employees.exception.EntityNotFoundException;
 import ru.sbt.employees.model.Department;
@@ -37,7 +35,6 @@ public class DepartmentController {
 
     private final int DEFAULT_PAGE_NUMBER = 0;
     private final int DEFAULT_PAGE_SIZE = 5;
-
 
     private final DepartmentService departmentService;
     private final DepartmentModelAssembler departmentModelAssembler;
@@ -65,13 +62,12 @@ public class DepartmentController {
 
         logger.debug("Handling find page: page={}, size={}",pageRequest.getPageNumber(), pageRequest.getPageSize());
 
-        Page<Department> departments = departmentService.findPage(pageRequest);
-        for(Department department : departments.getContent()) {
+        PagedModel<EntityModel<Department>> pageModel = pagedResourcesAssembler.toModel(departmentService.findPage(pageRequest));
+        for(EntityModel<Department> department : pageModel.getContent()) {
             department.add(linkTo(methodOn(DepartmentController.class).findPage(pageRequest, pagedResourcesAssembler)).withSelfRel());
-            department.add(linkTo(methodOn(DepartmentController.class).findDepartmentEmployees(department.getId())).withRel("employees"));
+            department.add(linkTo(methodOn(DepartmentController.class).findDepartmentEmployees(department.getContent().getId())).withRel("employees"));
         }
-        PagedModel.of(departments, linkTo(methodOn(DepartmentController.class).findPage(pageRequest, pagedResourcesAssembler)).withSelfRel());
-        return pagedResourcesAssembler.toModel(departments);
+        return pageModel;
     }
 
     @GetMapping("/{id}")

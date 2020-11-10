@@ -18,7 +18,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "departments", schema = "sbt")
-public class Department extends RepresentationModel<Department> {
+public class Department {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;

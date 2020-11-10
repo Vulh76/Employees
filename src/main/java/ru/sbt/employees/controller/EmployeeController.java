@@ -3,7 +3,6 @@ package ru.sbt.employees.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.PagedResourcesAssembler;
@@ -19,7 +18,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.sbt.employees.model.Department;
 import ru.sbt.employees.model.Employee;
@@ -63,13 +61,12 @@ public class EmployeeController {
 
         logger.debug("Handling find page: page={}, size={}", pageRequest.getPageNumber(), pageRequest.getPageSize());
 
-        Page<Employee> employees = employeeService.findPage(pageRequest);
-        for(Employee employee : employees.getContent()) {
+        PagedModel<EntityModel<Employee>> pagedModel = pagedResourcesAssembler.toModel(employeeService.findPage(pageRequest));
+        for(EntityModel<Employee> employee : pagedModel.getContent()) {
             employee.add(linkTo(methodOn(EmployeeController.class).findPage(pageRequest, pagedResourcesAssembler)).withSelfRel());
-            employee.add(linkTo(methodOn(EmployeeController.class).findEmployeeDepartment(employee.getId())).withRel("department"));
+            employee.add(linkTo(methodOn(EmployeeController.class).findEmployeeDepartment(employee.getContent().getId())).withRel("department"));
         }
-        PagedModel.of(employees, linkTo(methodOn(EmployeeController.class).findPage(pageRequest, pagedResourcesAssembler)).withSelfRel());
-        return pagedResourcesAssembler.toModel(employees);
+        return pagedModel;
     }
 
     @GetMapping("/{id}")
@@ -93,13 +90,12 @@ public class EmployeeController {
 
         logger.debug("Handling find employees by department id: id={}", id);
 
-        Page<Employee> employees = employeeService.findEmployeesByDepartmentId(id,  pageRequest);
-        PagedModel.of(employees, linkTo(methodOn(EmployeeController.class).findPage(pageRequest, pagedResourcesAssembler)).withSelfRel());
-        for(Employee employee : employees.getContent()) {
+        PagedModel<EntityModel<Employee>> pagedModel = pagedResourcesAssembler.toModel(employeeService.findEmployeesByDepartmentId(id,  pageRequest));
+        for(EntityModel<Employee> employee : pagedModel.getContent()) {
             employee.add(linkTo(methodOn(EmployeeController.class).findEmployeesByDepartmentId(id, pageRequest, pagedResourcesAssembler)).withSelfRel());
             employee.add(linkTo(methodOn(EmployeeController.class).findEmployeeDepartment(id)).withRel("department"));
         }
-        return pagedResourcesAssembler.toModel(employees);
+        return pagedModel;
     }
 
     @PostMapping
