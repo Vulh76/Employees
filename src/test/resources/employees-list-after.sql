@@ -1,1 +1,1 @@
-DELETE FROM employees;
+DELETE FROM sbt.employees;

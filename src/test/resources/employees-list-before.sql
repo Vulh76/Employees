@@ -1,4 +1,4 @@
-INSERT INTO employees (first_name, last_name, age, department_id)
+INSERT INTO sbt.employees (first_name, last_name, age, department_id)
 VALUES ('Андрей', 'Иванов', 27, 1),
        ('Илья', 'Думаченко', 34, 1),
        ('Наталья', 'Синичкина', 23, 1),
@@ -16,4 +16,4 @@ VALUES ('Андрей', 'Иванов', 27, 1),
        ('Потап', 'Горьев', 24, 4),
        ('Марина', 'Тополёва', 37, 4);
 
-ALTER sequence employees_id_seq restart with 1;
+ALTER sequence sbt.employees_id_seq restart with 1;

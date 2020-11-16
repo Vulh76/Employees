@@ -7,8 +7,10 @@ import org.mockito.Mockito;
 import ru.sbt.employees.model.Employee;
 import ru.sbt.employees.repository.EmployeeRepository;
 
+import javax.swing.text.html.Option;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 
 import static org.junit.Assert.*;
@@ -16,46 +18,49 @@ import static org.junit.Assert.*;
 public class EmployeeServiceTest {
 
     private EmployeeRepository employeeRepository;
-    private EmployeeServiceImpl employeeService;
+    private EmployeeService employeeService;
 
     @Before
     public void setUp() throws Exception {
         employeeRepository = Mockito.mock(EmployeeRepository.class);
         employeeService = new EmployeeServiceImpl(employeeRepository);
 
+        // Эмуляция базы
         HashMap<Long, Employee> longEmployeeHashMap = new HashMap<>();
         AtomicLong atomicLong = new AtomicLong();
 
+        // save
         Mockito.when(employeeRepository.save(Mockito.any())).thenAnswer(i -> {
-            long id = atomicLong.incrementAndGet();
             Employee argument = i.getArgument(0, Employee.class);
+            long id = atomicLong.incrementAndGet();
             argument.setId(id);
             longEmployeeHashMap.put(id, argument);
-            return id;
+            return argument;
         });
 
+        // findById
         Mockito.when(employeeRepository.findById(Mockito.anyLong())).thenAnswer(i ->
-                longEmployeeHashMap.get(i.getArgument(0, Long.class))
+                Optional.of(longEmployeeHashMap.get(i.getArgument(0, Long.class)))
         );
     }
 
     @Test
     public void addEmployeeTest1() {
-        Employee employee = new Employee();
+        Employee employee = new Employee("Андрей", "Петров", 25, null);
         employeeService.add(employee);
 
-        Employee car1 = employeeService.findById(employee.getId());
-        assertNotNull(car1);
+        Employee actual = employeeService.findById(employee.getId());
+
+        assertNotNull(actual);
     }
 
     @Test
     public void addEmployeeTest2() {
         ArgumentCaptor<Employee> captor = ArgumentCaptor.forClass(Employee.class);
-        Mockito.doReturn(1L).when(employeeRepository).save(captor.capture());
-        //Mockito.when(carDAO.add(captor.capture())).thenReturn(1L);
+        Mockito.doReturn(null).when(employeeRepository).save(captor.capture());
 
-        Employee employee1 = new Employee();
-        Employee employee2 = new Employee();
+        Employee employee1 = new Employee("Андрей", "Петров", 25, null);
+        Employee employee2 = new Employee("Сергей", "Симёнов", 35, null);
         employeeService.add(employee1);
         employeeService.add(employee2);
 

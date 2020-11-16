@@ -31,8 +31,4 @@ public class EmployeeModelAssembler implements RepresentationModelAssembler<Empl
                 .collect(Collectors.toList());
         return CollectionModel.of(employees, linkTo(methodOn(EmployeeController.class).findAll()).withSelfRel());
     }
-
-    /*public PagedModel<EntityModel<Employee>> toPagedModel(Page<Employee> employees) {
-
-    }*/
 }
