@@ -4,7 +4,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
-import org.slf4j.Logger;
 import ru.sbt.employees.model.Employee;
 import ru.sbt.employees.repository.EmployeeRepository;
 
